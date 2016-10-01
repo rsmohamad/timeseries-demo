@@ -1,5 +1,8 @@
 timeseriesCap = 50;
-const dataRange = 10
+const dataRange = 10;
+
+let gaussian = require('gaussian');
+let distribution = new gaussian(0, 1);
 
 import timeseries from 'timeseries-analysis'
 
@@ -40,7 +43,7 @@ Meteor.methods({
     },
 
     'randomizePrice': (price) => {
-        return Math.abs(price + Math.floor(Math.random() * dataRange) - dataRange / 2);
+        return Math.abs(price + distribution.ppf(Math.random()));
     },
 
     'getStockData': (type)=> {

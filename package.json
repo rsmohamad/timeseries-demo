@@ -5,6 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "gaussian": "^1.1.0",
     "kalmanjs": "^1.0.0-beta",
     "meteor-node-stubs": "~0.2.0",
     "peer": "^0.2.8",

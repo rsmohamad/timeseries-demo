@@ -3,21 +3,21 @@ import KalmanFilter from 'kalmanjs';
 let kalman;
 
 Meteor.startup(() => {
-    let price =0;
+    let price = 0;
 
-    Meteor.call('getLatestPrice', 'raw', (err, response)=>{
+    Meteor.call('getLatestPrice', 'raw', (err, response)=> {
         price = response;
     });
 
     //Hack to give an initial price in case database is empty.
-    if(!price){
-        price=0;
+    if (!price) {
+        price = 0;
     }
 
     kalmanInit();
 
     Meteor.setInterval(() => {
-        Meteor.call('randomizePrice', price, (err, response) => {
+        Meteor.call('randomizePrice', 48, (err, response) => {
             if (!err) {
                 price = response;
             } else {
@@ -36,8 +36,8 @@ Meteor.startup(() => {
 
 });
 
-function kalmanInit(){
-    kalman = new KalmanFilter({R:0.01, Q:1});
+function kalmanInit() {
+    kalman = new KalmanFilter({R: 0.01, Q: 2});
     let document = StockData.findOne({type: 'raw'});
     let rawData = document.data;
     let data = [];
@@ -53,7 +53,7 @@ function kalmanInit(){
     StockData.update({type: 'kalman'}, {type: 'kalman', data}, {upsert: true});
 }
 
-function kalmanInsert(price){
+function kalmanInsert(price) {
     price = kalman.filter(price);
     let type = "kalman";
     let data = {price: price, time: new Date()};
@@ -66,7 +66,8 @@ function kalmanInsert(price){
         },
         {
             upsert: true
-        });
+        }
+    );
 
     let document = StockData.findOne({type});
     if (document.data.length >= timeseriesCap) {

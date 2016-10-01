@@ -5,7 +5,11 @@ import {Template} from 'meteor/templating'
 import {ReactiveVar} from 'meteor/reactive-var'
 import {Tracker} from 'meteor/tracker'
 
-let latestPrice = new ReactiveVar(0);
+let latestRaw = new ReactiveVar(0);
+let latestMoving = new ReactiveVar(0);
+let latestEhler = new ReactiveVar(0);
+let latestKalman = new ReactiveVar(0);
+
 let chart;
 let rawData, movingAverage, iTrend, kalman;
 let time;
@@ -15,9 +19,18 @@ Template.home.onCreated(() => {
 });
 
 Template.home.helpers({
-    price: () => {
-        return latestPrice.get();
-    }
+    raw: () => {
+        return latestRaw.get();
+    },
+    moving: () => {
+        return latestMoving.get();
+    },
+    ehler: () => {
+        return latestEhler.get();
+    },
+    kalman: () => {
+        return latestKalman.get();
+    },
 });
 
 Template.home.onRendered(() => {
@@ -32,7 +45,7 @@ Template.home.onRendered(() => {
         axis: {
             y: {
                 label: {
-                    text: "Price ($)",
+                    text: "Voltage (V)",
                     position: "outer-bottom",
                     padding: {
                         right: 10
@@ -83,8 +96,6 @@ Template.home.onRendered(() => {
         if (!err) {
             movingAverage = _.pluck(response, 'price');
             movingAverage.unshift('Moving Average');
-            time = _.pluck(response, 'time');
-            time.unshift('x');
             chart.load({
                 columns: [
                     //time,
@@ -99,8 +110,6 @@ Template.home.onRendered(() => {
         if (!err) {
             iTrend = _.pluck(response, 'price');
             iTrend.unshift('Ehlers\' Trend');
-            time = _.pluck(response, 'time');
-            time.unshift('x');
             chart.load({
                 columns: [
                     //time,
@@ -115,8 +124,6 @@ Template.home.onRendered(() => {
         if (!err) {
             kalman = _.pluck(response, 'price');
             kalman.unshift('Kalman');
-            time = _.pluck(response, 'time');
-            time.unshift('x');
             chart.load({
                 columns: [
                     //time,
@@ -134,6 +141,7 @@ Template.home.onRendered(() => {
             if (!error) {
                 rawData = [response];
                 rawData.unshift('Raw');
+                latestRaw.set(response.toFixed(2));
             } else {
                 console.log(error.message);
             }
@@ -143,6 +151,7 @@ Template.home.onRendered(() => {
             if (!error) {
                 movingAverage = [response];
                 movingAverage.unshift('Moving Average');
+                latestMoving.set(response.toFixed(2));
             } else {
                 console.log(error.message);
             }
@@ -152,6 +161,7 @@ Template.home.onRendered(() => {
             if (!error) {
                 iTrend = [response];
                 iTrend.unshift('Ehlers\' Trend');
+                latestEhler.set(response.toFixed(2));
             } else {
                 console.log(error.message);
             }
@@ -161,6 +171,7 @@ Template.home.onRendered(() => {
             if (!error) {
                 kalman = [response];
                 kalman.unshift('Kalman');
+                latestKalman.set(response.toFixed(2));
             } else {
                 console.log(error.message);
             }

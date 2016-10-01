@@ -1,15 +1,81 @@
 <template name="home">
     <div class="container">
-        <div class="row">
+        <div class="row" style="margin-bottom: 0">
             <div class="col s12">
                 <div class="card hoverable">
                     <div class="card-content">
-                        <span class="card-title black-text"><b>Stock Price</b></span>
+                        <span class="card-title black-text">Voltage</span>
                         <div id="chart">
                         </div>
                     </div>
+                    <div class="card-action row center-align" style="margin-bottom: 0">
+
+                        <div class="col s3">
+                            <b style="font-size:17pt">{{raw}}</b>
+                            <br>
+                            <span style="font-size:13pt">Noisy</span>
+                        </div>
+                        <div class="col s3">
+                            <b style="font-size:17pt">{{moving}}</b>
+                            <br>
+                            <span style="font-size:13pt">Moving Average</span>
+                        </div>
+                        <div class="col s3">
+                            <b style="font-size:17pt">{{ehler}}</b>
+                            <br>
+                            <span style="font-size:13pt">Ehlers' Trend</span>
+                        </div>
+                        <div class="col s3">
+                            <b style="font-size:17pt">{{kalman}}</b>
+                            <br>
+                            <span style="font-size:13pt">Kalman</span>
+                        </div>
+
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title black-text">Moving Average</span>
+                        <p class="range-field">
+                            <label for="period" style="font-size:10pt">Period</label>
+                            <input type="range" id="period" min="0" max="100">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col s4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title black-text">Kalman Filter</span>
+                        <p class="range-field">
+                            <label for="q" style="font-size:10pt">Measurement Noise (Q)</label>
+                            <input type="range" id="q" min="0" max="100">
+                        </p>
+                        <p class="range-field">
+                            <label for="r" style="font-size:10pt">Process Noise (R)</label>
+                            <input type="range" id="r" min="0" max="100">
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col s4">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <span class="card-title black-text">John Ehlers' iTrend</span>
+                        <p class="range-field" id="alpha">
+                            <label for="alpha" style="font-size:10pt">Alpha</label>
+                            <input type="range" id="alpha" min="0" max="100">
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </template>
