@@ -11,7 +11,8 @@ Meteor.startup(() => {
 
     //Hack to give an initial price in case database is empty.
     if (!price) {
-        price = 0;
+        price = 48;
+        Meteor.call('insertPrice', price, "raw");
     }
 
     kalmanInit();
@@ -30,7 +31,6 @@ Meteor.startup(() => {
         Meteor.call('movingAverageFilter', 'raw');
         Meteor.call('iTrendFilter', 'raw');
         kalmanInsert(price);
-
 
     }, 1000);
 
